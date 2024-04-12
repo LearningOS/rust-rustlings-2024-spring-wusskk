@@ -2,7 +2,6 @@
 	heap
 	This question requires you to implement a binary heap function
 */
-// I AM NOT DONE
 
 use std::cmp::Ord;
 use std::default::Default;
@@ -37,7 +36,19 @@ where
     }
 
     pub fn add(&mut self, value: T) {
-        //TODO
+        self.count += 1;
+        self.items.push(value);
+        let mut idx = self.len();
+        let mut p_idx;
+        while idx > 1 {
+            p_idx = self.parent_idx(idx);
+            if !(self.comparator)(&self.items[p_idx], &self.items[idx]) {
+                self.items.swap(p_idx, idx);
+                idx = p_idx;
+            } else {
+                break;
+            }
+        }
     }
 
     fn parent_idx(&self, idx: usize) -> usize {
@@ -55,10 +66,17 @@ where
     fn right_child_idx(&self, idx: usize) -> usize {
         self.left_child_idx(idx) + 1
     }
-
+    
     fn smallest_child_idx(&self, idx: usize) -> usize {
-        //TODO
-		0
+        let left_idx = self.left_child_idx(idx);
+        let right_idx = self.right_child_idx(idx);
+        if right_idx > self.count {
+            left_idx
+        } else if (self.comparator)(&self.items[left_idx], &self.items[right_idx]) {
+            left_idx
+        } else {
+            right_idx
+        }
     }
 }
 
@@ -84,8 +102,28 @@ where
     type Item = T;
 
     fn next(&mut self) -> Option<T> {
-        //TODO
-		None
+        if self.is_empty() {
+            None
+        } else if self.count == 1 {
+            self.count -= 1;
+            Some(self.items.remove(0))
+        } else {
+            let mut idx = 1;
+            let min_idx = self.parent_idx(self.count - 1);
+            self.items.swap(1, self.count);
+            let min = self.items.remove(self.count);
+            self.count -= 1;
+            while idx <= min_idx {
+                let small = self.smallest_child_idx(idx);
+                if (self.comparator)(&self.items[idx], &self.items[small]) {
+                    break;
+                } else {
+                    self.items.swap(idx, small);
+                    idx = small;
+                }
+            }
+            Some(min)
+        }
     }
 }
 

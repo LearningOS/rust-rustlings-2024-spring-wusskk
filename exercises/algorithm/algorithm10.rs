@@ -2,9 +2,8 @@
 	graph
 	This problem requires you to implement a basic graph functio
 */
-// I AM NOT DONE
 
-use std::collections::{HashMap, HashSet};
+use std::collections::{HashMap, HashSet, hash_map::Entry};
 use std::fmt;
 #[derive(Debug, Clone)]
 pub struct NodeNotInGraph;
@@ -29,7 +28,23 @@ impl Graph for UndirectedGraph {
         &self.adjacency_table
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
-        //TODO
+        let (n1, n2, e) = edge;
+        match self.adjacency_table.entry(n1.to_string()) {
+            Entry::Occupied(mut entry) => {
+                entry.get_mut().push((n2.to_string(), e));
+            }
+            Entry::Vacant(entry) => {
+                entry.insert(vec![(n2.to_string(), e)]);
+            }
+        }
+        match self.adjacency_table.entry(n2.to_string()) {
+            Entry::Occupied(mut entry) => {
+                entry.get_mut().push((n1.to_string(), e));
+            }
+            Entry::Vacant(entry) => {
+                entry.insert(vec![(n1.to_string(), e)]);
+            }
+        }
     }
 }
 pub trait Graph {
