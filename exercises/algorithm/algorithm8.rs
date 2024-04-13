@@ -57,7 +57,7 @@ pub struct MyStack<T>
 	q1:Queue<T>,
 	q2:Queue<T>
 }
-impl<T> myStack<T> {
+impl<T> MyStack<T> {
     pub fn new() -> Self {
         Self {
 			main: 1,
@@ -108,7 +108,7 @@ mod tests {
 	
 	#[test]
 	fn test_queue(){
-		let mut s = myStack::<i32>::new();
+		let mut s = MyStack::<i32>::new();
 		assert_eq!(s.pop(), Err("Stack is empty"));
         s.push(1);
         s.push(2);
